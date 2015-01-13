@@ -56,6 +56,11 @@ module.exports = function(grunt) {
     grunt.log.writeln('').writeln('Reloading watch config...'.cyan);
   });
 
+  // Run any additional setup, if anyone is listening
+  if (grunt.event.listeners('watch::setup').length > 0) {
+    grunt.event.emit('watch::setup', taskrun);
+  }
+
   grunt.registerTask('watch', 'Run predefined tasks whenever watched files change.', function(target) {
     var self = this;
     var name = self.name || 'watch';
@@ -177,6 +182,11 @@ module.exports = function(grunt) {
         });
       }));
     });
+
+    // Notify any listeners that the task runner is ready
+    if (grunt.event.listeners('watch::ready').length > 0) {
+      grunt.event.emit('watch::ready', taskrun);
+    }
 
   });
 };
